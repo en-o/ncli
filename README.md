@@ -25,3 +25,9 @@ Options:
   -V, --version        Print version
 
 ```
+```shell
+PS G:\Rust\ncli> .\target\debug\ncli.exe -n tan -c 2
+Hello tan!
+Hello tan!
+
+```
