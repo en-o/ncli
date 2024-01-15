@@ -4,5 +4,5 @@ use clap::Subcommand;
 #[derive(Subcommand)]
 pub enum HttpCommands {
     /// 下载文件
-    wget { download: Option<String> },
+    wget { url: Option<String> },
 }
