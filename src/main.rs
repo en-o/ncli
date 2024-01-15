@@ -1,3 +1,11 @@
+use clap::Parser;
+use crate::demo::Args;
+
+mod demo;
+
 fn main() {
-    println!("Hello, world!");
+    let args = Args::parse();
+    for _ in 0..args.count {
+        println!("Hello {}!", args.name)
+    }
 }
