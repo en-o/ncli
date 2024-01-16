@@ -1,8 +1,8 @@
 # ncli
-
-#### 介绍
 rust 构建的命令行工具
 
+# 使用说明
+https://www.yuque.com/g/tanning/fquuhx/wr032rqrkdf13uci/collaborator/join?token=dShKyyTkcc2Fo3tT&source=doc_collaborator#
 
 # 依赖
 ## [命令行库 clap](https://docs.rs/clap/latest/clap/)
@@ -46,3 +46,5 @@ Hello tan!
 Hello tan!
 
 ```
+
+
