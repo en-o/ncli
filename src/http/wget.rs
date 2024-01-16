@@ -32,7 +32,7 @@ pub(crate) async fn dispose_wget(url: &String, dir: &Option<PathBuf>, rename: &O
 
     let file_name = find_file_name(url, rename);
     let save_path = format!("{}/{}", dir_path.to_string_lossy().to_string(), file_name);
-    println!("当前下载文件url: {url:?}, 存储路径：{save_path:?}");
+    // println!("当前下载文件url: {url:?}, 存储路径：{save_path:?}");
     download(url, save_path, file_name).await;
 }
 
@@ -82,12 +82,12 @@ async fn download(url: &String, dir: String, file_name: String) {
 
         // 获取响应体的大小
         let total_size = response.content_length().unwrap_or(0);
-        // 创建进度条
+        // 创建进度条 https://baijiahao.baidu.com/s?id=1620454960836172917
         let pb = ProgressBar::new(total_size);
         pb.set_style(ProgressStyle::default_bar()
-            .template("[{bar:40.cyan/blue}] {bytes}/{total_bytes} ({eta})").expect("")
+            .template("{spinner} {msg}: [{bar:40.cyan/blue}] {bytes}/{total_bytes} ({eta})").expect("进度条加载失败")
             .progress_chars("#>-"));
-
+        pb.set_message(format!("Downloading ===> {}", file_name));
         let mut out_file = File::create(dir).expect("文件创建失败");
 
         // 读取响应并更新进度条
@@ -95,12 +95,12 @@ async fn download(url: &String, dir: String, file_name: String) {
         while let Some(chunk)  = response.chunk().await.unwrap(){
             downloaded += chunk.len();
             pb.set_position(downloaded as u64);
-            out_file.write_all(&*chunk);
+            let _ = out_file.write_all(&*chunk);
         }
          // 打开文件并将响应体保存到文件
         // copy(&mut response.bytes().await.unwrap().as_ref(), &mut out_file).expect("下载文件失败");
         // 完成后关闭进度条
-        pb.finish_with_message("Download complete.");
+        pb.finish_with_message(format!("Download complete ===> {}", file_name));
     } else {
         println!("{}下载失败--------------------------", url)
     }
