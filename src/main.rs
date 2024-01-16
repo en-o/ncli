@@ -3,6 +3,7 @@ use crate::http::http::HttpCommands;
 
 mod http;
 mod demo;
+mod system;
 
 #[derive(Parser,Debug)]
 #[command(author, version, about, long_about = None)]
