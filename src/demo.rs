@@ -22,7 +22,7 @@ pub struct Args {
 }
 
 
-#[warn(dead_code)]
+#[allow(dead_code)]
 pub fn test(){
     // 获取接受参数
     let args = Args::parse();

@@ -25,8 +25,8 @@ rust 构建的命令行工具
 
 # demo 
 > windows 
-1. cargo build
-2. .\target\debug\ncli.exe --help
+1. `cargo build`
+2. `.\target\debug\ncli.exe --help` 或者 `cargo run --  --help` 
 ```shell
 PS G:\Rust\ncli> .\target\debug\ncli.exe --help
 Simple program to greet a person
