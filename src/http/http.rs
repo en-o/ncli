@@ -1,6 +1,7 @@
 use std::path::PathBuf;
 use clap::Subcommand;
 use crate::Cli;
+use crate::http::ping::dispose_ping;
 use crate::http::wget::dispose_wget;
 
 /// http 相关的
@@ -40,7 +41,7 @@ pub(crate) fn run_it(cli: Cli) {
             dispose_wget(url, dir, rename)
         }
         Some(HttpCommands::Ping { ip, port }) => {
-            println!("检测地址 : ip: {ip:?}, 端口：{port:?}")
+            dispose_ping(ip, port)
         }
         None => {
             println!("no use HttpCommands")
