@@ -5,7 +5,7 @@ use crate::http::scan::dispose_scan;
 use crate::http::wget::dispose_wget;
 
 /// http 相关的
-/// cargo run -- ping --help / cargo run -- wget --help
+/// cargo run -- scan --help / cargo run -- wget --help
 #[derive(Subcommand, Debug)]
 pub enum HttpCommands {
     /// 下载文件
@@ -43,7 +43,7 @@ pub enum HttpCommands {
 /// 参数的执行程序
 /// # 参数
 /// - cli:Cli::parse()
-pub(crate) fn run_it(cli: Cli) {
+pub(crate) fn run_it(cli: & Cli) {
     // 你可以检查是否存在子命令，如果找到就使用它们
     //  .\target\debug\ncli.exe Wget da
     match &cli.http {
