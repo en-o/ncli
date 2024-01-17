@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 use clap::Subcommand;
 use crate::Cli;
-use crate::http::ping::dispose_ping;
+use crate::http::scan::dispose_scan;
 use crate::http::wget::dispose_wget;
 
 /// http 相关的
@@ -19,13 +19,13 @@ pub enum HttpCommands {
         #[arg(short, long)]
         rename: Option<String>,
     },
-    /// 检测地址
-    Ping {
-        /// 检测ip
+    /// 扫描端口
+    Scan {
+        /// 目标IP
         ip: String,
-        /// 检测端口 - 可选[空：只验证ip是否有效]
+        /// 目标端口 - 可选[空： 展示所有端口状态]
         #[arg(short, long)]
-        port: Option<u32>,
+        port: Option<u16>,
     },
 }
 
@@ -40,8 +40,8 @@ pub(crate) fn run_it(cli: Cli) {
         Some(HttpCommands::Wget { url, dir, rename }) => {
             dispose_wget(url, dir, rename)
         }
-        Some(HttpCommands::Ping { ip, port }) => {
-            dispose_ping(ip, port)
+        Some(HttpCommands::Scan { ip, port }) => {
+            dispose_scan(ip, port)
         }
         None => {
             println!("no use HttpCommands")
