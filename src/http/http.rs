@@ -12,9 +12,11 @@ pub enum HttpCommands {
     Wget {
         /// 文件地址
         url: String,
+
         /// 存储位置 - 可选[空：当前执行路径下]
         #[arg(short, long)]
         dir: Option<PathBuf>,
+
         /// 自定义文件名称（不用写后缀）- 可选[空：文件原名]
         #[arg(short, long)]
         rename: Option<String>,
@@ -23,9 +25,17 @@ pub enum HttpCommands {
     Scan {
         /// 目标IP
         ip: String,
-        /// 目标端口 - 可选[空： 展示所有端口状态]
+
+        /// 目标端口 - 可选[空： 扫描所有端口] -p 3306
         #[arg(short, long)]
         port: Option<u16>,
+
+        /// 指定扫描的端口范围- 可选[与port存在的情况下，此参数不生效] -s 3300 -s 3310
+        /// 单个表示  [指定端口,MAX]
+        /// 两个表示 [指定端口Min,指定端口Max]
+        /// 多个则无效
+        #[arg(short, long)]
+        scope: Option<Vec<u16>>,
     },
 }
 
@@ -40,8 +50,8 @@ pub(crate) fn run_it(cli: Cli) {
         Some(HttpCommands::Wget { url, dir, rename }) => {
             dispose_wget(url, dir, rename)
         }
-        Some(HttpCommands::Scan { ip, port }) => {
-            dispose_scan(ip, port)
+        Some(HttpCommands::Scan { ip, port, scope }) => {
+            dispose_scan(ip, port, scope)
         }
         None => {
             println!("no use HttpCommands")
