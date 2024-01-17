@@ -102,7 +102,7 @@ async fn download(url: &String, dir: String, file_name: String) {
         // 完成后关闭进度条
         pb.finish_with_message(format!("Download complete ===> {}", file_name));
     } else {
-        println!("{}下载失败--------------------------", url)
+        println!("[{}]下载失败: {}", url, response.status().to_string())
     }
 
 }
