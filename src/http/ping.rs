@@ -1,6 +1,3 @@
-use std::net::{IpAddr};
-use std::time::{Duration};
-use pnet::packet::Packet;
 
 
 ///  wget 具体执行动作
@@ -12,7 +9,7 @@ pub(crate) async fn dispose_ping(ip: &String, port: &Option<u32>) {
     println!("检测地址 : ip: {ip:?}, 端口：{port:?}");
     match port {
         None => {
-
+            // 验证 ip
         }
         Some(_) => {
             // 验证 ip 端口
@@ -34,11 +31,4 @@ pub(crate) async fn dispose_ping(ip: &String, port: &Option<u32>) {
 }
 
 
-/// 探测ip是否通畅
-/// # 参数
-/// - destination_ip : ip / 域名
-/// - timeout : 持续时间
-fn ping(destination_ip: IpAddr, timeout: Duration){
-
-}
 
