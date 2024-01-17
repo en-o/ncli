@@ -1,3 +1,2 @@
-pub mod http;
-mod wget;
-mod scan;
+pub mod wget;
+pub mod scan;
