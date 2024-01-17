@@ -25,7 +25,7 @@ https://www.yuque.com/g/tanning/fquuhx/wr032rqrkdf13uci/collaborator/join?token=
 
 ### trait简单说明
 ####   #[arg(short, long)]
-> 用是为参数name设置单字母选项和长选项 `xx -n hi` / `xx name hi`
+> 用是为参数name设置单字母选项和长选项 `xx -n hi` / `xx --name hi`
 
 
 # demo 
