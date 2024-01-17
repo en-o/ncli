@@ -64,5 +64,6 @@ https://juejin.cn/post/7242623208825110586
 
 ```shell
 # 在根目录下 ， ./ncli/
+cargo build --release
 cargo install --path .
 ```
