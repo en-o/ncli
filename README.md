@@ -57,3 +57,12 @@ Hello tan!
 https://www.cnblogs.com/SleepSupervisor/p/17757751.html
 https://zhuanlan.zhihu.com/p/593919173
 https://juejin.cn/post/7242623208825110586
+
+
+# 安装本软件 
+> 放入全局环境变量  
+
+```shell
+# 在根目录下 ， ./ncli/
+cargo install --path .
+```
