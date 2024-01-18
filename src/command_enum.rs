@@ -3,7 +3,7 @@ use clap::Subcommand;
 use crate::Cli;
 use crate::http::scan::dispose_scan;
 use crate::http::wget::dispose_wget;
-use crate::system::pid::pid_all;
+use crate::system::pid::dispose_pid;
 
 
 ///  系统 相关的
@@ -43,9 +43,9 @@ pub enum Commands {
 
     /// pid
     Pid {
-        /// 查看所有pid详情
+        /// 查看指定端口的pid 可选[为空查询所有]
         #[arg(short, long)]
-        all:Option<String>,
+        port:Option<u16>
     },
 
 
@@ -66,8 +66,8 @@ pub(crate) fn run_it(cli: Cli) {
         Some(Commands::Scan { ip, port, scope }) => {
             dispose_scan(ip, port, scope)
         }
-        Some(Commands::Pid { all}) => {
-            pid_all()
+        Some(Commands::Pid { port}) => {
+            dispose_pid(port)
         }
         None => {
             println!("no use commands")
