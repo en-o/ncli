@@ -5,6 +5,7 @@ mod demo;
 mod command_enum;
 mod system;
 mod http;
+mod util;
 
 #[derive(Parser,Debug)]
 #[command(author, version, about, long_about = None)]
