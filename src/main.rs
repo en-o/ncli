@@ -6,6 +6,7 @@ mod command_enum;
 mod system;
 mod http;
 mod util;
+mod nginx;
 
 #[derive(Parser,Debug)]
 #[command(author, version, about, long_about = None)]

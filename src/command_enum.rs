@@ -3,6 +3,7 @@ use clap::Subcommand;
 use crate::Cli;
 use crate::http::scan::dispose_scan;
 use crate::http::wget::dispose_wget;
+use crate::nginx::tcp_proxy::dispose_ntp;
 use crate::system::pid::dispose_pid;
 
 
@@ -48,6 +49,20 @@ pub enum Commands {
         port:Option<u16>
     },
 
+    /// nginx tcp proxy (接口代理)
+    NTP{
+        /// 本地端口 {e.g 8080}
+        #[arg(short, long)]
+        local: u16,
+
+        /// 目标地址,默认http {e.g 192.168.1.1}
+        #[arg(short, long)]
+        url: String,
+
+        /// 目标端口 {e.g 8080}
+        #[arg(short, long)]
+        port: u16,
+    }
 
 }
 
@@ -68,6 +83,9 @@ pub(crate) fn run_it(cli: Cli) {
         }
         Some(Commands::Pid { port}) => {
             dispose_pid(port)
+        }
+        Some(Commands::NTP { local, url, port}) => {
+            dispose_ntp(local, url, port)
         }
         None => {
             println!("no use commands")
