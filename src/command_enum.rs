@@ -3,6 +3,7 @@ use clap::Subcommand;
 use crate::Cli;
 use crate::http::scan::dispose_scan;
 use crate::http::wget::dispose_wget;
+use crate::nginx::tcp_html::dispose_html;
 use crate::nginx::tcp_proxy::dispose_ntp;
 use crate::system::pid::dispose_pid;
 
@@ -46,11 +47,11 @@ pub enum Commands {
     Pid {
         /// 查看指定端口的pid 可选[为空查询所有]
         #[arg(short, long)]
-        port:Option<u16>
+        port: Option<u16>
     },
 
     /// nginx tcp proxy (接口代理)
-    NTP{
+    NTP {
         /// 本地端口 {e.g 8080}
         #[arg(short, long)]
         local: u16,
@@ -62,10 +63,23 @@ pub enum Commands {
         /// 目标端口 {e.g 8080}
         #[arg(short, long)]
         port: u16,
-    }
+    },
 
+    /// nginx proxy page (页面代理)
+    HTML {
+        /// html根目录路径
+        #[arg(short, long)]
+        assets: String,
+
+        /// 访问端口 {e.g 8080}
+        #[arg(short, long)]
+        port: u16,
+
+        /// 访问前缀  - 可选[默认 /]
+        #[arg(long)]
+        prefix: Option<String>,
+    },
 }
-
 
 
 /// 参数的执行程序
@@ -81,15 +95,17 @@ pub(crate) fn run_it(cli: Cli) {
         Some(Commands::Scan { ip, port, scope }) => {
             dispose_scan(ip, port, scope)
         }
-        Some(Commands::Pid { port}) => {
+        Some(Commands::Pid { port }) => {
             dispose_pid(port)
         }
-        Some(Commands::NTP { local, url, port}) => {
+        Some(Commands::NTP { local, url, port }) => {
             dispose_ntp(local, url, port)
+        }
+        Some(Commands::HTML { assets, port, prefix }) => {
+            dispose_html(assets, port, prefix)
         }
         None => {
             println!("no use commands")
         }
     }
-
 }
