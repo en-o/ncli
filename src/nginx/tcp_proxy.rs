@@ -9,9 +9,9 @@ use crate::nginx::tcp_proxy_listener::HttpListener;
 #[tokio::main]
 pub(crate) async fn dispose_ntp(local: &u16, url: &String, port: &u16) {
     println!("本地端口{},目标地址{},目标端口{}", local, url, port);
-    // 监听端口
+    // 构建监听端口对象
     let l_conn = Connection::new("0.0.0.0", *local);
-    // 转发接口
+    // 构建转发接口对象
     let f_conn = Connection::new(url, *port);
     // 构建 HttpListener
     let tcp = HttpListener::new(l_conn, f_conn);

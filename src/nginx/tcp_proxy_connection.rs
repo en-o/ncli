@@ -21,6 +21,9 @@ pub struct Connection<'a> {
 impl<'a> Connection<'a> {
 
     /// 构建 Connection
+    /// # 参数
+    /// - host : ip
+    /// - port : 端口
     pub fn new(host: &str, port: u16) -> Connection {
         Connection {
             protocol: Protocol::Default,
@@ -31,6 +34,11 @@ impl<'a> Connection<'a> {
     }
 
     /// 构建 Connection
+    /// # 参数
+    /// - p : 通信协议
+    /// - t : 传输协议
+    /// - host : ip
+    /// - port : 端口
     pub fn new2(p: Protocol, t: Transport, host: &str, port: u16) -> Connection {
         Connection {
             protocol: p,
@@ -38,25 +46,5 @@ impl<'a> Connection<'a> {
             host,
             port,
         }
-    }
-
-    /// println
-    pub fn display(&self) {
-        let p = match self.protocol {
-            Protocol::Default => "http",
-            Protocol::Http => "http",
-            Protocol::Http2 => "http2",
-        };
-
-        let t = match self.transport {
-            Transport::Default => "tcp",
-            Transport::Tcp => "tcp",
-            Transport::Tls => "tls",
-        };
-
-        println!(
-            "protocol: {}, transport:{}, host: {}, port: {}",
-            p, t, self.host, self.port
-        );
     }
 }
