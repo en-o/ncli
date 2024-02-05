@@ -12,7 +12,7 @@ use crate::nginx::tcp_proxy_handler::handle;
 /// - port : 访问端口
 /// - prefix : 访问前缀
 #[tokio::main]
-pub(crate) async fn dispose_html(path: &String, port: &u16, prefix: &Option<String>, api_target: &Option<String>) {
+pub(crate) async fn dispose_html(path: &String, port: &u16, prefix: &Option<String>) {
 
 
     // 构建资源目录
