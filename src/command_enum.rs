@@ -67,13 +67,13 @@ pub enum Commands {
 
     /// nginx proxy page (页面代理)
     HTML {
-        /// html根目录路径
-        #[arg(short, long)]
-        assets: String,
-
         /// 访问端口 {e.g 8080}
         #[arg(short, long)]
         port: u16,
+
+        /// html根目录路径   - 可选[默认当前执行目录 ./]
+        #[arg(short, long)]
+        assets: Option<String>,
 
         /// 访问前缀  - 可选[默认 /]
         #[arg(long)]
