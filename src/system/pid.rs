@@ -76,7 +76,7 @@ fn pid_by_port(port: &u16) -> Option<Vec<u32>> {
                 //     si.associated_pids,
                 //     tcp_si.state
                 // )
-                if (tcp_si.local_port == *port) {
+                if tcp_si.local_port == *port {
                     pids.extend(si.associated_pids.iter());
                 }
             }
@@ -85,7 +85,7 @@ fn pid_by_port(port: &u16) -> Option<Vec<u32>> {
                 //     "UDP {}:{} -> *:* {:?}",
                 //     udp_si.local_addr, udp_si.local_port, si.associated_pids
                 // )
-                if (udp_si.local_port == *port) {
+                if udp_si.local_port == *port {
                     pids.extend(si.associated_pids.iter());
                 }
             }

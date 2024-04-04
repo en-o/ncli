@@ -1,4 +1,4 @@
-use crate::nginx::tcp_proxy_connection::{Connection, Protocol};
+use crate::nginx::tcp_proxy_connection::{Connection};
 use crate::nginx::tcp_proxy_listener::HttpListener;
 
 /// tcp 接口流量转发
