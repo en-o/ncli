@@ -78,6 +78,14 @@ pub enum Commands {
         /// 访问前缀  - 可选[默认 /]
         #[arg(long)]
         prefix: Option<String>,
+
+        /// 代理接口 - 可选 [为空不处理，e.g 192.168.1.1:8200 ,最后没有斜杠]
+        #[arg(long)]
+        proxy: Option<String>,
+
+        /// 代理前缀 - 代理接口设置了这个前缀也必填 [127.0.0.1:port/proxyPrefix -> proxyApi]
+        #[arg(long)]
+        proxy_prefix: Option<String>,
     },
 }
 
@@ -101,8 +109,8 @@ pub(crate) fn run_it(cli: Cli) {
         Some(Commands::NTP { local, url, port }) => {
             dispose_ntp(local, url, port)
         }
-        Some(Commands::HTML { assets, port, prefix }) => {
-            dispose_html(assets, port, prefix)
+        Some(Commands::HTML { assets, port, prefix,proxy, proxy_prefix}) => {
+            dispose_html(assets, port, prefix, proxy, proxy_prefix)
         }
         None => {
             println!("no use commands")
