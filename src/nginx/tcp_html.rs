@@ -1,17 +1,23 @@
+use std::error::Error;
 use std::sync::Arc;
-use axum::http::{StatusCode, Uri};
+use axum::http::{HeaderMap, HeaderName, HeaderValue, StatusCode, Uri};
 use axum::{
     response::{IntoResponse},
     Router,
 };
-use axum::response::{Redirect};
+use axum::body::Body;
+use axum::extract::Request;
+use axum::response::{Redirect, Response};
 use axum::routing::any;
+use reqwest::Client;
 use tokio::net::TcpListener;
+use tower::Service;
 use tower_http::services::{ServeDir};
 
 
 struct RedirectParams {
     third_party_api: String,
+    client: Client
 }
 
 /// 静态文件服务器[代理html]
@@ -47,16 +53,16 @@ pub(crate) async fn dispose_html<'a>(path: &Option<String>
 
     match proxy{
         Some(third_party_api) => {
-            let state = Arc::new(RedirectParams { third_party_api:third_party_api.to_string() });
+            let client = Client::new();
+            let state = Arc::new(RedirectParams { third_party_api:third_party_api.to_string(), client });
             match proxy_prefix {
                 Some(pp) => {
                     let proxy_prefix_all = format!("/{}/*path", pp);
                     app = app
                         .route(
                             &*proxy_prefix_all,
-                            // any(forward_api)
-                            // any(redirect_api)
-                            any(|uri: Uri| redirect_api(uri, state))
+                            any(|uri: Uri| forward_api(uri, state))
+                            // any(|uri: Uri| redirect_api(uri, state))
                         )
                         .nest_service(prefix_str, serve_dir.clone())
                         .fallback(handler_404);
@@ -79,10 +85,6 @@ pub(crate) async fn dispose_html<'a>(path: &Option<String>
         }
     }
 
-
-
-
-
     // 启动服务
     axum::serve(listener, app).await.unwrap();
 
@@ -101,31 +103,36 @@ async fn redirect_api<'a>(uri: Uri, state: Arc<RedirectParams>) -> Redirect {
     Redirect::temporary(&new_uri)
 }
 
-// /// 转发接口
-// async fn forward_api(uri: Uri, third_party_api: &str, req: Request<BoxBody>)  -> Result<Response, Infallible> {
-//     let proxy_prefix_all = format!("http://{}/","192.168.0.15:8200");
-//     // 构造新的 URI
-//     let new_uri = proxy_prefix_all.to_owned() + &uri.path().trim_start_matches('/');
-//     println!("forward_api: {}", new_uri);
-//     // 重定向到第三方接口
-//     let client = Client::new();
-//     let mut forwarded_req = Request::new(req.into_body());
-//     *forwarded_req.uri_mut() = new_uri.parse()?;
-//
-//     let forwarded_resp = client
-//         .request(forwarded_req.method().clone(), forwarded_req.uri().clone())
-//         .body(forwarded_req.into_body())
-//         .await
-//         .map_err(|_| Infallible)?;
-//
-//     let (parts, body) = forwarded_resp.into_parts();
-//     let status = parts.status;
-//     let headers = parts.headers;
-//
-//     let response = Response::from_parts(status, headers, body.boxed());
-//
-//     Ok(response)
-// }
+// 定义一个处理函数，用于转发请求
+async fn forward_api<'a>(uri: Uri, state: Arc<RedirectParams>) -> Response  {
+    let proxy_prefix_all = format!("http://{}/",state.third_party_api);
+    // 构造新的 URI
+    let new_uri = proxy_prefix_all.to_owned() + &uri.path().trim_start_matches('/');
+    println!("forward_api: {}", new_uri);
+
+    let reqwest_response = match state.client.get(new_uri).send().await {
+        Ok(res) => res,
+        Err(err) => {
+            tracing::error!(%err, "request failed");
+            return (StatusCode::BAD_REQUEST, Body::empty()).into_response();
+        }
+    };
+    let response_builder = Response::builder().status(reqwest_response.status().as_u16());
+
+    // Here the mapping of headers is required due to reqwest and axum differ on the http crate versions
+    let mut headers = HeaderMap::with_capacity(reqwest_response.headers().len());
+    headers.extend(reqwest_response.headers().into_iter().map(|(name, value)| {
+        let name = HeaderName::from_bytes(name.as_ref()).unwrap();
+        let value = HeaderValue::from_bytes(value.as_ref()).unwrap();
+        (name, value)
+    }));
+
+    response_builder
+        .body(Body::from_stream(reqwest_response.bytes_stream()))
+        // This unwrap is fine because the body is empty here
+        .unwrap()
+}
+
 
 
 /// 全局404页面
